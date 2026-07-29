@@ -1,0 +1,291 @@
+@import "tailwindcss";
+@import "@fontsource-variable/sora";
+@import "@fontsource-variable/inter";
+
+/* ============================================================
+   Design tokens — Labmed São Camilo
+   Paleta oficial: vermelho #ED1C24 · cinza #808080 · branco
+   ============================================================ */
+@theme {
+  --font-display: "Sora Variable", "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Marca */
+  --color-brand: #ed1c24; /* ícones, acentos e texto grande (4,38:1) */
+  --color-brand-cta: #e4131c; /* fundo de botões c/ texto branco — AA 4,76:1 */
+  --color-brand-dark: #c0141b; /* hover / texto vermelho pequeno — AA 6,2:1 */
+  --color-brand-deep: #9e1016;
+  --color-brand-light: #ff686e; /* vermelho claro p/ texto sobre fundo escuro — AA 6:1 */
+  --color-brand-soft: #fdedee; /* tint p/ badges e fundos suaves */
+
+  /* Neutros derivados do cinza #808080 */
+  --color-ink: #232327; /* títulos (quase-preto) */
+  --color-ink-soft: #46464e; /* corpo de texto — AA sobre branco */
+  --color-steel: #808080; /* cinza oficial — só texto grande/detalhe decorativo */
+  --color-steel-dark: #66666e; /* legendas pequenas — AA 5,7:1 */
+  --color-mist: #f5f5f6; /* fundo de seção alternado */
+  --color-line: #e6e6e9; /* bordas finas */
+  --color-night: #1b1b1f; /* fundo escuro (toxicológico, cards) */
+
+  /* Seção Atendimento Acolhedor + rodapé */
+  --color-sand: #f5efe4; /* bege areia claro */
+  --color-sand-line: #e7ddcc; /* borda sobre o bege */
+  --color-wood: #a9855c; /* madeira clara (acentos) */
+  --color-wood-deep: #7d5f3e; /* madeira p/ texto pequeno — AA sobre sand */
+  --color-sage: #8fa68e; /* verde suave (folhas decorativas) */
+  --color-espresso: #29241f; /* cinza quente escuro do rodapé */
+
+  --radius-bento: 1.5rem;
+
+  --animate-marquee: marquee 36s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+  /* compensa o header fixo nas âncoras */
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  @apply bg-white font-sans text-ink-soft antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-brand);
+  color: #fff;
+}
+
+/* Foco visível e consistente (teclado) */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   Padrão de cruz (+) — marca d'água sutil da identidade
+   ============================================================ */
+.cross-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cpath d='M28 22v12M22 28h12' stroke='%23232327' stroke-opacity='0.06' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+.cross-pattern-light {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cpath d='M28 22v12M22 28h12' stroke='%23ffffff' stroke-opacity='0.07' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   Reveal on scroll (IntersectionObserver adiciona .is-visible)
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--stagger, 0) * 90ms);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   Header — estado "rolado" (blur) controlado via JS
+   ============================================================ */
+#site-header {
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+
+#site-header.is-scrolled {
+  background-color: rgb(255 255 255 / 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom-color: var(--color-line);
+}
+
+/* Link ativo do menu (scroll-spy) */
+.nav-link.is-active {
+  color: var(--color-ink);
+}
+.nav-link.is-active::after {
+  transform: scaleX(1);
+}
+.nav-link::after {
+  content: "";
+  display: block;
+  height: 2px;
+  margin-top: 2px;
+  background: var(--color-brand);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+/* ============================================================
+   Micro-interações
+   ============================================================ */
+.bento-card {
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease;
+}
+
+.bento-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 12px 32px -12px rgb(35 35 39 / 0.14),
+    0 2px 8px -4px rgb(35 35 39 / 0.06);
+  border-color: rgb(237 28 36 / 0.25);
+}
+
+.exam-row {
+  transition: background-color 0.25s ease;
+}
+
+.lift {
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.lift:hover {
+  transform: translateY(-2px);
+}
+
+.lift:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Marquee de serviços */
+.marquee-track {
+  animation: var(--animate-marquee);
+  will-change: transform;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ============================================================
+   Hamburger moderno: 3 traços assimétricos que viram X
+   ============================================================ */
+.burger-line {
+  display: block;
+  height: 2px;
+  width: 22px;
+  border-radius: 9999px;
+  background: currentColor;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease,
+    width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.burger-line + .burger-line {
+  margin-top: 6px;
+}
+
+/* terceiro traço mais curto, alinhado à direita — cresce no hover */
+.burger-line:nth-child(3) {
+  width: 13px;
+}
+
+#menu-toggle:hover .burger-line {
+  width: 22px;
+}
+
+#menu-toggle.is-open .burger-line:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+#menu-toggle.is-open .burger-line:nth-child(2) {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+#menu-toggle.is-open .burger-line:nth-child(3) {
+  width: 22px;
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Menu mobile */
+#mobile-menu {
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+}
+
+#mobile-menu:not(.is-open) {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#mobile-menu .mobile-link {
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--stagger, 0) * 50ms + 80ms);
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+#mobile-menu.is-open .mobile-link {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   Acessibilidade: reduz movimento quando solicitado
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  #mobile-menu .mobile-link {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .burger-line {
+    transition: none;
+  }
+
+  .marquee-track {
+    animation: none;
+  }
+
+  .bento-card,
+  .lift,
+  .bento-card:hover,
+  .lift:hover,
+  .lift:active {
+    transition: none;
+    transform: none;
+  }
+}
